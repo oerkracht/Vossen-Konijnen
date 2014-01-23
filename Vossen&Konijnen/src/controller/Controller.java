@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 
 import model.Simulator;
 import model.ThreadSimulate;
+//test
 
 public class Controller implements ActionListener {
 
