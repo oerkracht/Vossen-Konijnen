@@ -1,6 +1,9 @@
-package simulator;
+package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import model.Simulator;
+import model.ThreadSimulate;
 
 public class Controller implements ActionListener {
 

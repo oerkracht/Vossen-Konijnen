@@ -1,9 +1,12 @@
-package simulator;
+package model;
 import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.awt.Color;
+
+import controller.Controller;
+import view.SimulatorView;
 
 /**
  * A simple predator-prey simulator, based on a rectangular field
@@ -22,10 +25,12 @@ public class Simulator
     // The probability that a fox will be created in any given grid position.
     private static final double FOX_CREATION_PROBABILITY = 0.02;
     // The probability that a rabbit will be created in any given grid position.
-    private static final double RABBIT_CREATION_PROBABILITY = 0.08;    
+    private static final double RABBIT_CREATION_PROBABILITY = 0.08;
+    // The probability that a wolf will be created in any given grid position.
+    private static final double WOLF_CREATION_PROBABILITY = 0.02;
 
     // List of animals in the field.
-    private List<Animal> animals;
+    private List<Actor> animals;
     // The current state of the field.
     private Field field;
     // The current step of the simulation.
@@ -55,14 +60,14 @@ public class Simulator
             width = DEFAULT_WIDTH;
         }
         
-        animals = new ArrayList<Animal>();
+        animals = new ArrayList<Actor>();
         field = new Field(depth, width);
 
         // Create a view of the state of each location in the field.
         view = new SimulatorView(depth, width, new Controller(this));
         view.setColor(Rabbit.class, Color.orange);
         view.setColor(Fox.class, Color.blue);
-        
+        view.setColor(Wolf.class, Color.black);
         // Setup a valid starting point.
         reset();
     }
@@ -102,12 +107,12 @@ public class Simulator
         step++;
 
         // Provide space for newborn animals.
-        List<Animal> newAnimals = new ArrayList<Animal>();        
+        List<Actor> newAnimals = new ArrayList<Actor>();        
         // Let all rabbits act.
-        for(Iterator<Animal> it = animals.iterator(); it.hasNext(); ) {
-            Animal animal = it.next();
+        for(Iterator<Actor> it = animals.iterator(); it.hasNext(); ) {
+            Actor animal = (Actor)it.next();
             animal.act(newAnimals);
-            if(! animal.isAlive()) {
+            if(! animal.isActive()) {
                 it.remove();
             }
         }
@@ -149,6 +154,11 @@ public class Simulator
                     Location location = new Location(row, col);
                     Rabbit rabbit = new Rabbit(true, field, location);
                     animals.add(rabbit);
+                }
+                else if(rand.nextDouble() <= WOLF_CREATION_PROBABILITY) {
+                    Location location = new Location(row, col);
+                    Wolf wolf = new Wolf(true, field, location);
+                    animals.add(wolf);
                 }
                 // else leave the location empty.
             }

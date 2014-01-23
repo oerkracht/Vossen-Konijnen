@@ -1,4 +1,6 @@
-package simulator;
+package model;
+
+import controller.Controller;
 
 public class ThreadSimulate extends Thread {
 	
